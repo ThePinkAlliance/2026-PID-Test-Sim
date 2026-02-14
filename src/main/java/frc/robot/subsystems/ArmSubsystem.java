@@ -168,6 +168,8 @@ public class ArmSubsystem extends SubsystemBase {
     // Update the simulation of the arm
     m_ArmSim.setInput(m_PivotMotor.get() * RobotController.getBatteryVoltage());
     m_ArmSim.update(0.02);
+    m_ArmSim.getOutput();
+    m_PivotMotorSim.setMotorCurrent(m_ArmSim.getCurrentDrawAmps());
 
     // Update the encoder simulation
     double angle = m_ArmSim.getAngleRads();
