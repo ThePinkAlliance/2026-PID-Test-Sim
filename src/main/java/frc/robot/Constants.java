@@ -45,7 +45,7 @@ public final class Constants {
     public static final double ARM_PIVOT_PID_MAX_OUTPUT = 0.25;
     public static final double ARM_PIVOT_PID_MIN_OUTPUT = -0.25;
     public static final double ARM_PIVOT_PID_SET_POINT_VERTICAL = 600.0;
-    public static final double ARM_PIVOT_PID_SET_POINT_DEPLOYED = 1200.0;
+    public static final double ARM_PIVOT_PID_SET_POINT_DEPLOYED = 1185.0;
     public static final double ARM_PIVOT_PID_SET_POINT_STOWED = 0.0;
     
     // Returns a safe pivot speed based on a governor constant

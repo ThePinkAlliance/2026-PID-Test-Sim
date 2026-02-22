@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -54,16 +55,40 @@ public class ArmSubsystem extends SubsystemBase {
   private double kP, kI, kD;
   private Pigeon2 m_IMU;
   private SingleJointedArmSim m_ArmSim;
-  private final Mechanism2d m_mech2d = new Mechanism2d(90, 90,new Color8Bit(Color.kWhite));
-  private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 55, 21.75);
-  private final MechanismLigament2d m_arm_bottom = m_armPivot.append(
-      new MechanismLigament2d(
-          "Arm Bottom",
-          20,
-          -225,
-          7,
-          new Color8Bit(Color.kBlueViolet)));
+  private final Mechanism2d m_mech2d = new Mechanism2d(90, 90,new Color8Bit(Color.kDarkSlateGray));
   
+  private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 45, 21.75);
+  
+  private final MechanismLigament2d m_arm_base_right = m_armPivot.append(
+      new MechanismLigament2d(
+          "Arm Base Right",
+          22,
+          0, //start angle counterclockwise from the positive X axis, so -225 starts the arm pointing down and to the left
+          20,
+          new Color8Bit(Color.kPink)));
+  private final MechanismLigament2d m_arm_base_left = m_armPivot.append(
+      new MechanismLigament2d(
+          "Arm Base Left",
+          22,
+          180, //start angle counterclockwise from the positive X axis, so -225 starts the arm pointing down and to the left
+          20,
+          new Color8Bit(Color.kPink)));
+  
+  private final MechanismLigament2d m_arm_base_stand = m_armPivot.append(
+      new MechanismLigament2d(
+          "Arm Base Stand",
+          10,
+          90, //start angle counterclockwise from the positive X axis, so -225 starts the arm pointing down and to the left
+          20,
+          new Color8Bit(Color.kBlue)));
+
+  private final MechanismLigament2d m_arm_bar = m_arm_base_stand.append(
+      new MechanismLigament2d(
+          "Arm Bar",
+          20,
+          0, //start angle counterclockwise from the positive X axis, so -225 starts the arm pointing down and to the left
+          7,
+          new Color8Bit(Color.kSnow)));
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -151,7 +176,7 @@ public class ArmSubsystem extends SubsystemBase {
       1.0, 
       inchesToMeters(10), 
       0.0, 
-      4.08, 
+      4.06, 
       false, 
       degreesToRadians(0));
   }
@@ -190,7 +215,10 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // Update the Mechanism2d visualization
-    m_arm_bottom.setAngle((-Math.toDegrees(angle)-180) - (-30)); // Convert radians
+    double angleDegrees = (Math.toDegrees(angle))-118;
+    System.out.println("Arm Angle (degrees): " + angleDegrees + " :: " + angle);
+    
+    m_arm_bar.setAngle((angleDegrees)); // Convert radians
   }
 
   // Returns true if the arm is at the end position
