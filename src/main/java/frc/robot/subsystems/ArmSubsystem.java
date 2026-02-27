@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -56,6 +55,7 @@ public class ArmSubsystem extends SubsystemBase {
   private Pigeon2 m_IMU;
   private SingleJointedArmSim m_ArmSim;
   private final Mechanism2d m_mech2d = new Mechanism2d(90, 90,new Color8Bit(Color.kDarkSlateGray));
+
   
   private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 45, 21.75);
   
@@ -216,7 +216,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     // Update the Mechanism2d visualization
     double angleDegrees = (Math.toDegrees(angle))-118;
-    System.out.println("Arm Angle (degrees): " + angleDegrees + " :: " + angle);
+    //System.out.println("Arm Angle (degrees): " + angleDegrees + " :: " + angle);
     
     m_arm_bar.setAngle((angleDegrees)); // Convert radians
   }
