@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -18,10 +19,12 @@ import com.revrobotics.PersistMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -97,6 +100,7 @@ public class ArmSubsystem extends SubsystemBase {
     SetupEncoders();
     SetupSwitches(); 
     SetupPIDController(); 
+    SetupIMU();
     //SetupIMU();
     if (RobotBase.isSimulation()) {
       SetupMotorsSim();
@@ -142,7 +146,7 @@ public class ArmSubsystem extends SubsystemBase {
   // Setup PID controller
   private void SetupPIDController() {
     // Sets PID coefficients for the Pivot neo
-    kP = 0.001;
+    kP = 0.005;
     kI = 0;
     kD = 0;
     m_PivotPID = new PIDController(kP, kI, kD);
@@ -341,9 +345,19 @@ public class ArmSubsystem extends SubsystemBase {
       this);
   }
 
+  public void movePivotToZeroWithPigeon() {
+    m_PivotMotor.set(
+        MathUtil.clamp(
+            m_PivotPID.calculate(-m_IMU.getPitch().getValueAsDouble(), 0),
+            Constants.ArmSubsystemConstants.ARM_PIVOT_PID_MIN_OUTPUT,
+            Constants.ArmSubsystemConstants.ARM_PIVOT_PID_MAX_OUTPUT));
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Error to Pitch", m_IMU.getPitch().getValueAsDouble());
+
     SmartDashboard.putNumber("Arm Pivot Angle", getPivotAngle());
     SmartDashboard.putNumber("Arm Pivot Ticks", getPivotTicks());
     SmartDashboard.putBoolean("Arm at Start", isArmAtStart());

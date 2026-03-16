@@ -11,17 +11,11 @@ import frc.robot.subsystems.ArmSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class PivotArmPID extends Command {
   private ArmSubsystem armSubsystem;
-  private double setPoint;
-  private double timeoutSeconds;
-  private Timer watchDogTimer;
 
   /** Creates a new PivotArm. */
-  public PivotArmPID(ArmSubsystem armSubsystem, double setPoint, double timeoutSeconds) {
+  public PivotArmPID(ArmSubsystem armSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystem = armSubsystem;
-    this.setPoint = setPoint;
-    this.timeoutSeconds = timeoutSeconds;
-    this.watchDogTimer = new Timer();
     addRequirements(this.armSubsystem);
 
   }
@@ -29,18 +23,15 @@ public class PivotArmPID extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // Start watchdog timer.  Note: MUST reset before starting.
-    watchDogTimer.reset();
-    watchDogTimer.start();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.movePivotWithPID(armSubsystem.getPivotTicks(), setPoint);
+    armSubsystem.movePivotToZeroWithPigeon();
     System.out.println("PID Error: " + armSubsystem.getPivotPIDError());
     System.out.println("PID Arrived: " + armSubsystem.getPivotPIDAtSetpoint());
-    System.out.println("CMD Watchdog: " + watchDogTimer.get());
   }
 
   // Called once the command ends or is interrupted.
@@ -53,6 +44,7 @@ public class PivotArmPID extends Command {
   @Override
   public boolean isFinished() {
     //return false because PID move is supposed to hold
-    return armSubsystem.getPivotPIDAtSetpoint() || watchDogTimer.hasElapsed(timeoutSeconds);
+    //return armSubsystem.getPivotPIDAtSetpoint();
+    return false;
   }
 }

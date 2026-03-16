@@ -14,33 +14,27 @@ import frc.robot.Constants.ArmSubsystemConstants.DIRECTION;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class PivotArm extends Command {
   private ArmSubsystem armSubsystem;
-  private DoubleSupplier speed;
-  private double timeoutSeconds = 0;
-  private Timer watchDogTimer;
+  private double speed;
 
 
   /** Creates a new PivotArm. */
-  public PivotArm(ArmSubsystem armSubsystem, DoubleSupplier speed, double timeoutSeconds) {
+  public PivotArm(ArmSubsystem armSubsystem, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystem = armSubsystem;
     this.speed = speed;
-    this.timeoutSeconds = timeoutSeconds;
-    this.watchDogTimer = new Timer();
     addRequirements(this.armSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // Start watchdog timer.  Note: MUST reset before starting.
-    watchDogTimer.reset();
-    watchDogTimer.start();
+    // Start watchdog timer.  Note: MUST reset before starting.\
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.pivot(speed.getAsDouble());
+    armSubsystem.pivot(speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -70,8 +64,6 @@ public class PivotArm extends Command {
   @Override
   public boolean isFinished() {
     //End command if either switch is true or a timeout occurs
-    boolean value = atSwitch() || watchDogTimer.hasElapsed(timeoutSeconds);
-    System.out.println("PivotArm isFinished: " + value);
-    return value;
+    return false;
   }
 }

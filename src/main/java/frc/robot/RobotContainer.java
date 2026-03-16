@@ -20,7 +20,19 @@ public class RobotContainer {
     configureBindings();
   }
 
+
   private void configureBindings() {
+
+    m_driverController.x().whileTrue(
+      new PivotArmPID(m_armSubsystem)
+    );
+
+    m_driverController.y().whileTrue(new PivotArm(m_armSubsystem, 0.2));
+    m_driverController.a().whileTrue(new PivotArm(m_armSubsystem, -0.2));
+
+
+
+    /*
     m_driverController.a().whileTrue(
       new PivotArm(m_armSubsystem, () -> Constants.ArmSubsystemConstants.GetSafePivotSpeed(Constants.ArmSubsystemConstants.ARM_MAX_OPERATION_SPEED_POWER), 
       Constants.ArmSubsystemConstants.ARM_MAX_OPERATION_TIME_SECONDS)
@@ -44,8 +56,8 @@ public class RobotContainer {
       new PivotArmPID(m_armSubsystem, Constants.ArmSubsystemConstants.ARM_PIVOT_PID_SET_POINT_STOWED,
       Constants.ArmSubsystemConstants.ARM_MAX_OPERATION_TIME_SECONDS)
     );
+    */
   }
-
   public ArmSubsystem getArmSubsystem() {
     return m_armSubsystem;
   }
